@@ -11,9 +11,6 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-
- 
-
     public function show($id)
     {
         try {
@@ -36,7 +33,6 @@ class UserController extends Controller
         }
     }
 
-
     // Actualizar Credenciales del administrador
     public function updateDataAdmin(Request $request, $id)
     {
@@ -53,12 +49,10 @@ class UserController extends Controller
             } else {
                 $data = $request->all();
 
-                // Verifica si el campo 'password' no tiene nada lo elimina
                 if (empty($data['password'])) {
                     unset($data['password']);
                 }
 
-                // Actualiza el usuario con los datos restantes
                 $user->update($data);
 
                 return response()->json([
