@@ -59,10 +59,6 @@ class ProductController extends Controller
         try {
             $data = $request->all();
 
-            if (!$request->brand_id) {
-                return response()->json(['success' => false, 'errors' =>  ['brand_id' => ['Campo requerido.']]], 200);
-            }
-
             Product::create($data);
             return response()->json(['success' => true, 'title' => 'Correcto!', 'message' => 'Registro realizado con éxito.'], 200);
         } catch (\Throwable $th) {

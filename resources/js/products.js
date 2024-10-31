@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import { cleanModal, insertItems, insertMessgeValidate, toastController } from './app.js';
+import { cleanMessageValidation, cleanModal, insertItems, insertMessgeValidate, toastController } from './app.js';
 
 const maxImages = 4;
 const imageContainers = document.getElementById('imageContainers');
@@ -85,10 +85,16 @@ $('body').on('click', '#btnModalRegister', function () {
 
     url = 'api/product/register';
     method = 'POST';
+
+    $('#brand_id').empty().trigger('change');
+    cleanMessageValidation();
 })
 
 // Abrir modal para edicion
 $('body').on('click', '#edit', function () {
+    $('#brand_id').empty().trigger('change');
+    cleanMessageValidation();
+
     $('#modalCenterTitle').text('Actualizar Producto');
     mainId = $(this).data('id');
 
@@ -229,9 +235,8 @@ $('body').on('input', '#fileInput', function (event) {
                     name: (images.length + 1)
                 });
 
-
                 if (images.length <= maxImages) {
-                    imageContainers.innerHTML = ''; // Limpiar el contenedor antes de agregar nuevas imágenes
+                    imageContainers.innerHTML = '';
                     const columns = [
                         [],
                         [],
@@ -240,20 +245,13 @@ $('body').on('input', '#fileInput', function (event) {
                         []
                     ];
 
-
                     // Distribuir imágenes en las columnas
                     images.forEach((image, index) => {
-                        // console.log('ImAGES OBJETC: ', image);
-                        // if (index < 2) {
-                        columns[index].push(image.image); // Primer columna
-                        // } else if (index < 4) {
-                        // columns[1].push(image); // Segunda columna
-                        // } else {
-                        // columns[2].push(image); // Tercer columna
-                        // }
+
+                        columns[index].push(image.image);
                     });
 
-                    // Agregar imágenes a las columnas
+                    // aladir imagenes a las columnas
                     columns.forEach((columnImages, colIndex) => {
                         const colDiv = document.createElement('div');
                         colDiv.className = `col-xs-6 col-sm-4 image-column`;
@@ -352,14 +350,6 @@ function uploadImages(imagesArray, id, imageId = null) {
     })
 }
 
-
-// SUBIR IMAGENES
-// $('body').on('click', '#loadImages', function () {
-//     uploadImages(images, mainId)
-//     $('#modalImages').modal('hide');
-//     // images.id
-//     console.log('IMAGES: ', images);
-// })
 
 // Funcion global que consulta y muestra las imagenes
 function loadImagesContainer(id, base64 = null) {

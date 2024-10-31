@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,8 +18,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// LOGIN y AUTENTICACION
+Route::get('/auth', [AuthController::class, 'authenticate']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    // return $request->user();
+});
+
+
+
+Route::prefix('user')->group(function () {
+    Route::get('/get/{id}', [UserController::class, 'show']);
+    Route::put('/updateDataAdmin/{id}', [UserController::class, 'updateDataAdmin']);
 });
 
 Route::prefix('brand')->group(function () {
