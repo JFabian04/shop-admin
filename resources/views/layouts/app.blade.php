@@ -177,8 +177,6 @@
                                     class="footer-link fw-bolder">Fabián Ramos</a>
                             </div>
                             <div>
-                                <img class="me-3" src="{{ asset('assets/img/icon/tecnoparque-green-gray.png') }}"
-                                    alt="" width="130">
                                 <img src="{{ asset('assets/img/icon/logo.png') }}" alt="" width="130">
                             </div>
                         </div>

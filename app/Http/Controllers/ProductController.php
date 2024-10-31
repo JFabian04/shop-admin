@@ -44,7 +44,7 @@ class ProductController extends Controller
 
         if ($data['status'] == true) {
 
-            $resp = $data['data']->with(['brand:id,name'])->filterName($request->name)->where('status', 0)->paginate(10);
+            $resp = $data['data']->with(['brand:id,name'])->with('product_files')->filterName($request->name)->where('status', 0)->paginate(10);
             // dd($resp);
 
             return response()->json($resp, 200);
@@ -58,6 +58,10 @@ class ProductController extends Controller
     {
         try {
             $data = $request->all();
+
+            if (!$request->brand_id) {
+                return response()->json(['success' => false, 'errors' =>  ['brand_id' => ['Campo requerido.']]], 200);
+            }
 
             Product::create($data);
             return response()->json(['success' => true, 'title' => 'Correcto!', 'message' => 'Registro realizado con éxito.'], 200);
