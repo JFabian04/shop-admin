@@ -12,10 +12,19 @@ class Brand extends Model
 
     protected $fillable = [
         'name',
-        'identifier'
+        'identifier',
+        'status'
     ];
 
-    public function products(): HasMany {
+    public function products(): HasMany
+    {
         return $this->hasMany(Product::class);
+    }
+
+    public function scopeFilterName($query, $name)
+    {
+        if ($name) {
+            $query->where('name', 'LIKE', "$name%");
+        }
     }
 }

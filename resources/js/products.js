@@ -5,7 +5,7 @@ let table = $('#table').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
-        url: "api/brand/get",
+        url: "api/product/get",
         error: function (xhr) {
             if (xhr.status === 401) {
                 window.location.href = '/login';
@@ -15,15 +15,18 @@ let table = $('#table').DataTable({
     order: [[2, 'desc']],
     columns: [
         { data: "name" },
-        { data: "identifier" },
-        {
-            data: "created_at",
-            render: function (data, type, row) {
-                // Formatear la fecha y hora
-                var fecha = new Date(data);
-                return fecha.toLocaleDateString();
-            }
-        },
+        { data: "unit_measure" },
+        { data: "shipment_date" },
+        { data: "stock" },
+        { data: "brand.name" },
+        // {
+        //     data: "created_at",
+        //     render: function (data, type, row) {
+        //         // Formatear la fecha y hora
+        //         var fecha = new Date(data);
+        //         return fecha.toLocaleDateString();
+        //     }
+        // },
         {
             data: "status",
             render: function (data, type, row) {
@@ -34,6 +37,7 @@ let table = $('#table').DataTable({
                 color = data == 0 ? 'bg-label-success' : 'bg-label-danger'
 
                 return '<span id="delete" class="badge ' + color + ' me-1 cursor-pointer">' + text + '</span>';
+          
             }
         },
         { // Columna adicional
@@ -66,24 +70,32 @@ let mainId;
 $('body').on('click', '#btnModalRegister', function () {
     cleanModal("#form", '#closeModal');
 
-    $('#modalCenterTitle').text('Registrar Marca')
+    $('#modalCenterTitle').text('Registrar Producto')
 
-    url = 'api/brand/register';
+    url = 'api/product/register';
     method = 'POST';
 })
 
 // Abrir modal para edicion
 $('body').on('click', '#edit', function () {
-    $('#modalCenterTitle').text('Actualizar Marca');
+    $('#modalCenterTitle').text('Actualizar Producto');
     mainId = $(this).data('id');
 
-    url = 'api/brand/update/' + mainId;
+    url = 'api/product/update/' + mainId;
     method = 'PUT';
 
     $.ajax({
-        url: 'api/brand/get/' + mainId,
+        url: 'api/product/get/' + mainId,
         success: function (response) {
             console.log('DATA: ', response.data);
+
+
+            let brandId = response.data.brand_id;
+            let brandName = response.data.brand.name;
+
+            // Prellenar el select con el valor preseleccionado
+            let newOption = new Option(brandName, brandId, false, false);
+            $('#brand_id').append(newOption).val(brandId);
 
             $('#nameItemModal').text(response.data.name);
             insertItems(response.data)
@@ -94,7 +106,7 @@ $('body').on('click', '#edit', function () {
     })
 })
 
-// Solicitud para reigstrar 
+// Solicitud para reigstrar Producto
 $('body').on('submit', '#form', function (e) {
     e.preventDefault();
 
@@ -127,18 +139,18 @@ $('body').on('submit', '#form', function (e) {
     })
 })
 
-// Activar o desactivar 
+// Activar o desactivar Producto
 $('body').on('click', '#delete', function () {
     const id = $(this).data('id');
 
     $.ajax({
-        url: 'api/brand/changestatus/' + id,
+        url: 'api/product/changestatus/' + id,
         method: 'PUT',
         success: function (response) {
             console.log('DISABLED: ', response);
             if (response.success) {
                 table.ajax.reload(null, false);
-            }else{
+            } else {
                 toastController(response.title, response.message)
             }
         },
@@ -162,7 +174,7 @@ $('body').on('click', '#reset', function () {
 // Restaurar
 $('body').on('click', '#btnReset', function () {
     $.ajax({
-        url: 'api/brand/delete/' + mainId,
+        url: 'api/product/delete/' + mainId,
         method: 'delete',
         success: function (response) {
             table.ajax.reload(null, false);

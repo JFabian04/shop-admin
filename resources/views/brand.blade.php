@@ -5,58 +5,104 @@
 @endsection
 
 @section('content')
-    <table id="table" class="bg-white display border dark:border-none " style="width: 100%">
-        <thead class=" dark:bg-slate-700">
-            <tr>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="display-6 fw-bold mt-4">
+            <span class="bg-label-primary p-2 rounded">
+                Administración de Marcas
+            </span>
+        </h4>
+        <p>Administra las Marcas de tu tienda.</p>
 
-                <th>
-                    Nombre
-                </th>
-                <th>
-                    Indentificador
-                </th>
-                <th>
-                    Estado
-                </th>
+        <div class="d-flex justify-content-end m-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCenter"
+                id="btnModalRegister">
+                <i class='bx bxs-add-to-queue'></i>
+                Registrar
+            </button>
+        </div>
 
-                <th>
-                    Acciones
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+        <div class="card">        
+            <div class="table-responsive text-nowrap p-4">
+                <table class="table" id="table">
+                    <thead>
+                        <tr >
+                            <th class="text-primary">Nombre</th>
+                            <th class="text-primary">Indentificador</th>
+                            <th class="text-primary">Fecha Registro</th>
+                            <th class="text-primary">Estado</th>
+                            <th class="text-primary">acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
 
-
-    <button data-dialog-target="modal"
-        class="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
-        type="button">
-        Open Modal
-    </button>
-    <div data-dialog-backdrop="modal" data-dialog-backdrop-close="true"
-        class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
-        <div data-dialog="modal" class="relative m-4 p-4 w-2/5 min-w-[40%] max-w-[40%] rounded-lg bg-white shadow-sm">
-            <div class="flex shrink-0 items-center pb-4 text-xl font-medium text-slate-800">
-                Its a simple Modal
+                    </tbody>
+                </table>
             </div>
-            <div class="relative border-t border-slate-200 py-4 leading-normal text-slate-600 font-light">
-                The key to more success is to have a lot of pillows. Put it this
-                way, it took me twenty five years to get these plants, twenty five
-                years of blood sweat and tears, and I&apos;m never giving up,
-                I&apos;m just getting started. I&apos;m up to something. Fan luv.
-            </div>
-            <div class="flex shrink-0 flex-wrap items-center pt-4 justify-end">
-                <button data-dialog-close="true"
-                    class="rounded-md border border-transparent py-2 px-4 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button">
-                    Cancel
-                </button>
-                <button data-dialog-close="true"
-                    class="rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
-                    type="button">
-                    Confirm
-                </button>
+        </div>
+
+    </div>
+
+    <!-- Modal  para reigstrar/editar-->
+    <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form class="modal-content" id="form">
+                <div class="modal-header">
+                    <h5 class="display-6 text-primary fw-bold" id="modalCenterTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        id="closeModal"></button>
+                </div>
+
+                <div class="mx-4">
+                    <p class="badge bg-label-danger" id="nameItemModal"></p>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameWithTitle" class="form-label text-primary">Nombre</label>
+                            <input type="text" name="name" id="name" class="form-control"
+                                placeholder="Ingrese el Nombre" />
+                            <div class="error-validate" id="error-name"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Confirmar elimianr --}}
+    <div class="modal fade" id="modalReset" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">¿Desea eliminar esta marca?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        id="closeModalPalm"></button>
+                </div>
+
+                <small class="text-primary" style="margin-left: 25px" id="nameItemReset"></small>
+
+                <div class="modal-body">
+                    <p>Eliminar esta marca, también eliminará todos los productos asociados.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="btnReset" data-bs-dismiss="modal">
+                        Eliminar
+                    </button>
+
+                </div>
             </div>
         </div>
     </div>

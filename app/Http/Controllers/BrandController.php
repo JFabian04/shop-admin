@@ -29,18 +29,18 @@ class BrandController extends Controller
         if ($data['status'] == true) {
             return datatables()->of($data['data'])->toJson();
         } else {
-            return response()->json(['status' => false, 'Error interno del servidor: ' . $data['error']], 500);
+            return response()->json(['success' => false, 'Error interno del servidor: ' . $data['error']], 500);
         }
     }
 
     // Obtener marcas para responde en JSON
-    public function gatAllObject()
+    public function gatAllObject(Request $request)
     {
-        $data = $this->getAll();
-        if ($data['status'] == true) {
-            return response()->json(['status' => true, 'data' => $data['data']], 200);
-        } else {
-            return response()->json(['status' => false, 'Error interno del servidor: ' . $data['error']], 500);
+        try {
+            $data = Brand::filterName($request->name)->take(15)->where('status', 0)->get();;
+            return response()->json($data, 200);
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
         }
     }
 
@@ -49,14 +49,21 @@ class BrandController extends Controller
     {
         try {
             $data = $request->all();
-            
+
             // Generar y añadir a la data el identifacor unico
             $data['identifier'] = $this->genUniqueId();
 
-            Brand::create($data);
-            return response()->json(['status' => true, 'title' => 'Correcto!', 'message' => 'Registro realizado con éxito.'], 200);
+            // Validar si la marca ya está registrada
+            $item = Brand::where('name', $data['name'])->get();
+
+            if (count($item) > 0) {
+                return response()->json(['success' => false, 'errors' =>  ['name' => ['La marca ya ha sido registrada.']]], 200);
+            } else {
+                Brand::create($data);
+                return response()->json(['success' => true, 'title' => 'Correcto!', 'message' => 'Registro realizado con éxito.'], 200);
+            }
         } catch (\Throwable $th) {
-            return response()->json(['status' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
+            return response()->json(['success' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
         }
     }
 
@@ -66,9 +73,9 @@ class BrandController extends Controller
         try {
             $item = Brand::find($id);
 
-            return response()->json(['status' => true, 'data' => $item]);
+            return response()->json(['success' => true, 'data' => $item]);
         } catch (\Throwable $th) {
-            return response()->json(['status' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
+            return response()->json(['success' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
         }
     }
 
@@ -78,11 +85,11 @@ class BrandController extends Controller
         try {
             $item = Brand::find($id);
 
-            $item->update($request);
+            $item->update($request->all());
 
-            return response()->json(['status' => true, 'title' => 'Correcto!', 'message' => 'Actualización realizada con éxito.']);
+            return response()->json(['success' => true, 'title' => 'Correcto!', 'message' => 'Actualización realizada con éxito.']);
         } catch (\Throwable $th) {
-            return response()->json(['status' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
+            return response()->json(['success' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
         }
     }
 
@@ -92,15 +99,17 @@ class BrandController extends Controller
         try {
             $item = Brand::find($id);
 
-            if ($item) {
-                $item->update(['status' => !$item->status]);
+            // dd($item);
 
-                return response()->json(['status' => true, 'title' => 'Actualizado!', 'message' => 'El estado fue cambiado.'], 200);
+            if ($item) {
+                $item->update(['status' => $item->status == 0 ? 1 : 0]);
+
+                return response()->json(['success' => true, 'title' => 'Actualizado!', 'message' => 'El estado fue cambiado.'], 200);
             } else {
-                return response()->json(['status' => false, 'title' => '404!', 'message' => 'Ocurrió un error. Intente nuevamente.'], 200);
+                return response()->json(['success' => false, 'title' => '404!', 'message' => 'Ocurrió un error. Intente nuevamente.'], 200);
             }
         } catch (\Throwable $th) {
-            return response()->json(['status' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
+            return response()->json(['success' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
         }
     }
 
@@ -112,12 +121,12 @@ class BrandController extends Controller
 
             if ($item) {
                 $item->delete();
-                return response()->json(['status' => true, 'title' => 'Eliminado!', 'message' => 'El registro se eliminó con éxito.'], 200);
+                return response()->json(['success' => true, 'title' => 'Eliminado!', 'message' => 'El registro se eliminó con éxito.'], 200);
             } else {
-                return response()->json(['status' => false, 'title' => '404!', 'message' => 'Ocurrió un error. Intente nuevamente.'], 200);
+                return response()->json(['success' => false, 'title' => '404!', 'message' => 'Ocurrió un error. Intente nuevamente.'], 200);
             }
         } catch (\Throwable $th) {
-            return response()->json(['status' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
+            return response()->json(['success' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
         }
     }
 
@@ -127,7 +136,7 @@ class BrandController extends Controller
         do {
             $uniqueId = substr(md5(uniqid(mt_rand(), true)), 0, 10);
         } while (Brand::where('identifier', $uniqueId)->exists());
-    
+
         return $uniqueId;
     }
 }

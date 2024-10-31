@@ -14,9 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('layouts.app');
+    return view('dashboard');
 });
 
-Route::get('/brand', function () {
+Route::get('/marcas', function () {
     return view('brand');
+});
+
+Route::get('/productos', function () {
+    return view('products');
 });
