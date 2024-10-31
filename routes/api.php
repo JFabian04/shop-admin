@@ -34,10 +34,13 @@ Route::prefix('product')->group(function () {
     Route::get('/get', [ProductController::class, 'gatAllTable']);
     Route::post('/getJson', [ProductController::class, 'gatAllObject']);
     Route::post('/register', [ProductController::class, 'store']);
-    Route::post('/upload/{id}', [ProductController::class, 'uploadImages']);
-    Route::get('/images/{id}', [ProductController::class, 'getImages']);
     Route::get('/get/{id}', [ProductController::class, 'show']);
     Route::put('/update/{id}', [ProductController::class, 'update']);
     Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
     Route::put('/changestatus/{id}', [ProductController::class, 'changeStatus']);
+    
+    Route::post('/loadImages', [ProductController::class, 'uploadImages']);
+    Route::get('/getImages/{id}', [ProductController::class, 'getImages']);
+    Route::delete('/deleteImage', [ProductController::class, 'deletePhoto']);
+    Route::put('/updateImage', [ProductController::class, 'updateMainImage']);
 });

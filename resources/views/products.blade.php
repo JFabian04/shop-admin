@@ -27,6 +27,7 @@
                 <table class="table" id="table">
                     <thead>
                         <tr>
+                            <th class="text-primary">Id</th>
                             <th class="text-primary">Nombre</th>
                             <th class="text-primary">Unidad de Medida</th>
                             <th class="text-primary">Fecha Desembarque</th>
@@ -162,78 +163,33 @@
     </div>
 
     {{-- Modal para imegenes --}}
-    <div class="modal fade" id="modalImage" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <form class="modal-content" id="formImages">
+    <div class="modal fade" id="modalImages" tabindex="-1" role="dialog" aria-labelledby="modalImagesLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="display-6 text-primary fw-bold" id="modalImageTitle"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        id="closeModal"></button>
+                    <h4 class="modal-title" id="modalImagesLabel">Cargar Imágenes</h4>
                 </div>
-
-                <div class="mx-4">
-                    <p class="badge bg-label-danger" id="nameItemModal"></p>
-                </div>
-
-                <div class="modal-body">
-                    <div id="imageContainers" class="row">
-                        <!-- Contenedores de imágenes -->
-                        <div class="col-3 mb-2">
-                            <input type="file" name="image1" class="form-control" data-number="1"
-                                accept="image/*" />
-                            <div class="image-preview" id="imagePreview1"></div>
-                            <button type="button" class="btn btn-danger btn-sm remove-image" data-number="1"
-                                style="display: none;">X</button>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="mainImage" id="mainImage1"
-                                    value="1">
-                                <label class="form-check-label" for="mainImage1">Portada</label>
-                            </div>
-                        </div>
-                        <div class="col-3 mb-2">
-                            <input type="file" name="image2" class="form-control" data-number="2"
-                                accept="image/*" />
-                            <div class="image-preview" id="imagePreview2"></div>
-                            <button type="button" class="btn btn-danger btn-sm remove-image" data-number="2"
-                                style="display: none;">X</button>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="mainImage" id="mainImage2"
-                                    value="2">
-                                <label class="form-check-label" for="mainImage2">Portada</label>
-                            </div>
-                        </div>
-                        <div class="col-3 mb-2">
-                            <input type="file" name="image3" class="form-control" data-number="3"
-                                accept="image/*" />
-                            <div class="image-preview" id="imagePreview3"></div>
-                            <button type="button" class="btn btn-danger btn-sm remove-image" data-number="3"
-                                style="display: none;">X</button>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="mainImage" id="mainImage3"
-                                    value="3">
-                                <label class="form-check-label" for="mainImage3">Portada</label>
-                            </div>
-                        </div>
-                        <div class="col-3 mb-2">
-                            <input type="file" name="image4" class="form-control" data-number="4"
-                                accept="image/*" />
-                            <div class="image-preview" id="imagePreview4"></div>
-                            <button type="button" class="btn btn-danger btn-sm remove-image" data-number="4"
-                                style="display: none;">X</button>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="mainImage" id="mainImage4"
-                                    value="4">
-                                <label class="form-check-label" for="mainImage4">Portada</label>
-                            </div>
-                        </div>
+                <form id="formImages" class="modal-body">
+                    <!-- Botón para cargar archivos -->
+                    <div class="form-group btnd-none">
+                        <label class="btn btn-primary btn-file">
+                            <input type="file" class="hidden" name="images[]" id="fileInput" multiple
+                                accept="image/*">
+                            Seleccionar Imágenes
+                        </label>
                     </div>
-                </div>
 
+                    <!-- Contenedores para mostrar imágenes -->
+                    <div class="row" id="imageContainers">
+                        <!-- Las imágenes cargadas se mostrarán aquí -->
+                    </div>
+                </form>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button id="btnExit" type="button" class="btn btn-default" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary btnd-none" id="loadImages">Guardar</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
