@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
+use App\Models\ProductFile;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -38,13 +39,16 @@ class ProductController extends Controller
     public function gatAllObject(Request $request)
     {
         $data = $this->getAll();
+
+
         if ($data['status'] == true) {
 
-            $resp = $data['data']->with(['brand:id,name'])->filterName($request->name)->take(15)->where('status', 0)->get();
+            $resp = $data['data']->with(['brand:id,name'])->filterName($request->name)->where('status', 0)->paginate(10);
+            // dd($resp);
 
-            return response()->json(['success' => true, 'data' => $$resp], 200);
+            return response()->json($resp, 200);
         } else {
-            return response()->json(['success' => false, 'Error interno del servidor: ' . $data['error']], 500);
+            return response()->json('Error interno del servidor: ' . $data['error'], 500);
         }
     }
 
@@ -60,6 +64,7 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
         }
     }
+
 
     // Funcion para Obtener por ID
     public function show($id)
@@ -120,5 +125,54 @@ class ProductController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'Error interno del servidor: ' . $th->getMessage()], 500);
         }
+    }
+
+    // Función para cargar las imagenes del producto
+    public function uploadImages(Request $request, $id)
+    {
+        $imagesData = json_decode($request->input('images'), true);
+
+        foreach ($imagesData as $imageData) {
+            if (isset($imageData['image']) && !empty($imageData['image'])) {
+                $imageFile = $imageData['image'];
+                $main = isset($imageData['main']) ? $imageData['main'] : 0; // Valor por defecto 0 si no existe
+
+                // Obtener el número del contenedor de la imagen
+                $imageNumber = $imageData['number'];
+
+                // nombre único para la imagen
+                $imageName = $imageNumber . '_' . time() . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
+
+                // mover la imagen a la carpeta designada
+                $imageFile->move(public_path('product_files/' . $id), $imageName);
+
+                // Busca si ya existe en la base de datos
+                $productFile = ProductFile::where('product_id', $id)->where('file_name', 'like', "$imageNumber%")->first();
+
+                if ($productFile) {
+                    // Si existe, actualizar
+                    $productFile->file_name = $imageName;
+                    $productFile->is_main = $main;
+                    $productFile->save();
+                } else {
+                    // Si no existe, crear uno nuevo
+                    $newProductFile = new ProductFile();
+                    $newProductFile->product_id = $id;
+                    $newProductFile->file_name = $imageName;
+                    $newProductFile->is_main = $main;
+                    $newProductFile->save();
+                }
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Imágenes cargadas correctamente'], 201);
+    }
+
+    // Función para cargar imagens de producto
+    public function getImages($id)
+    {
+        $images = ProductFile::where('product_id', $id)->get();
+
+        return response()->json($images, 200);
     }
 }

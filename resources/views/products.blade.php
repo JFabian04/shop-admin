@@ -161,6 +161,84 @@
         </div>
     </div>
 
+    {{-- Modal para imegenes --}}
+    <div class="modal fade" id="modalImage" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form class="modal-content" id="formImages">
+                <div class="modal-header">
+                    <h5 class="display-6 text-primary fw-bold" id="modalImageTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        id="closeModal"></button>
+                </div>
+
+                <div class="mx-4">
+                    <p class="badge bg-label-danger" id="nameItemModal"></p>
+                </div>
+
+                <div class="modal-body">
+                    <div id="imageContainers" class="row">
+                        <!-- Contenedores de imágenes -->
+                        <div class="col-3 mb-2">
+                            <input type="file" name="image1" class="form-control" data-number="1"
+                                accept="image/*" />
+                            <div class="image-preview" id="imagePreview1"></div>
+                            <button type="button" class="btn btn-danger btn-sm remove-image" data-number="1"
+                                style="display: none;">X</button>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="mainImage" id="mainImage1"
+                                    value="1">
+                                <label class="form-check-label" for="mainImage1">Portada</label>
+                            </div>
+                        </div>
+                        <div class="col-3 mb-2">
+                            <input type="file" name="image2" class="form-control" data-number="2"
+                                accept="image/*" />
+                            <div class="image-preview" id="imagePreview2"></div>
+                            <button type="button" class="btn btn-danger btn-sm remove-image" data-number="2"
+                                style="display: none;">X</button>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="mainImage" id="mainImage2"
+                                    value="2">
+                                <label class="form-check-label" for="mainImage2">Portada</label>
+                            </div>
+                        </div>
+                        <div class="col-3 mb-2">
+                            <input type="file" name="image3" class="form-control" data-number="3"
+                                accept="image/*" />
+                            <div class="image-preview" id="imagePreview3"></div>
+                            <button type="button" class="btn btn-danger btn-sm remove-image" data-number="3"
+                                style="display: none;">X</button>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="mainImage" id="mainImage3"
+                                    value="3">
+                                <label class="form-check-label" for="mainImage3">Portada</label>
+                            </div>
+                        </div>
+                        <div class="col-3 mb-2">
+                            <input type="file" name="image4" class="form-control" data-number="4"
+                                accept="image/*" />
+                            <div class="image-preview" id="imagePreview4"></div>
+                            <button type="button" class="btn btn-danger btn-sm remove-image" data-number="4"
+                                style="display: none;">X</button>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="mainImage" id="mainImage4"
+                                    value="4">
+                                <label class="form-check-label" for="mainImage4">Portada</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
     <script>
         // Traduccion de SELECT2
         const traduction = {
